@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const flightSchema = new mongoose.Schema({
-  airplane: {
+  airplane_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Airplane",
     required: true
@@ -44,6 +44,10 @@ const flightSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  price: {
+    type: Number,
+    required : true
+  },
   priceperseat_E: {
     type: Number,
     required: true
@@ -63,6 +67,11 @@ const flightSchema = new mongoose.Schema({
   facilities : {
     type: [String],
     default:[]
+  },
+  trip_type: {
+    type: String,
+    enum: ["One Way", "Round Trip"],
+    required: true
   }
 }, {timestamps : true});
 
