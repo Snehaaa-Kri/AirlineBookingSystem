@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
-import { userRouter, airplaneRoutes, airportRoutes } from './routes/index.js';
+import { userRouter, airplaneRoutes, airportRoutes, passengerRoutes } from './routes/index.js';
 
 const app = express();
 
@@ -23,5 +23,6 @@ app.use("/api/v1/auth", userRouter); //auth
 // app.use("/api/v1/flight", )
 app.use("/api/v1/airplane", airplaneRoutes)
 app.use("/api/v1/airport", airportRoutes)
+app.use("/api/v1/passenger", passengerRoutes)
 
 export default app;
