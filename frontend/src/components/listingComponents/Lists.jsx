@@ -132,6 +132,8 @@ function Lists() {
       setCurrentIndex((prevIndex) =>
         prevIndex + flightsPerPage >= flightsData.length ? 0 : prevIndex + flightsPerPage
       );
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
   
     return (
