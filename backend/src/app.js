@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
-import authRoutes from './routes/user.route.js'
+import { userRouter, airplaneRoutes, airportRoutes } from './routes/index.js';
 
 const app = express();
 
@@ -19,7 +19,9 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 app.use(express.static("public"))
 app.use(cookieParser())
 
-app.use("/api/v1/auth", authRoutes); //auth
-// app.use("api/search")
+app.use("/api/v1/auth", userRouter); //auth
+// app.use("/api/v1/flight", )
+app.use("/api/v1/airplane", airplaneRoutes)
+app.use("/api/v1/airport", airportRoutes)
 
 export default app;

@@ -1,7 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const flightController = require("../controllers/flightController");
+import express from 'express'
+const fligthRouter = express.Router();
 
-router.get("/", flightController.getFlights);
+// fligthRouter.get("/addflight", flightController.getFlights);
 
-module.exports = router;
+
+module.exports = fligthRouter;

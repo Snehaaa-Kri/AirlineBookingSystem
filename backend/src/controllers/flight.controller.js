@@ -1,10 +1,23 @@
-const Flight = require("../models/Flight");
+import {Flight} from '../models/flight.models.js'
 
-exports.getFlights = async (req, res) => {
-  try {
-    const flights = await Flight.find({});
-    res.json(flights);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+const addFlight = async (req, res) => {
+  try{
+    const {
+      airline,
+      flightNumber,
+      
+    } = req.body;
+
   }
-};
+  catch(err){
+    console.log("Error in adding flight. Try again!");
+    res.status(400).json({
+      success : false,
+      message: "Adding flight failed!"
+    })
+  }
+}
+
+
+export {addFlight}

@@ -1,31 +1,40 @@
 import mongoose from "mongoose";
 
 const flightSchema = new mongoose.Schema({
-  airline: {
-    type: String,
-    requred: true
+  airplane: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Airplane",
+    required: true
   },
   flightNumber: {
     type: String,
+    unique: true,
     required : true
   },
   coach_type : {
     type: String,
-    enum : ["Economy","Bussiness", "First"],
+    enum : ["Economy","Business", "First"],
     required: true
   },
-  source_city: {
-    type: String,
+  source_airport: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Airport",
+    required: true
+  },
+  destination_airport: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Airport",
     requied: true
   },
-  destination_city: {
-    type: String,
+  departure_date: {
+    type: Date,
     required: true
   },
-  arrivalTime: Date,
-  departureTime: Date,
+  arrival_date: {
+    type : Date  //only in round trip
+  },
   duration: {
-    type : Number   // diff :  arrival -departure (in minutes)
+    type : Number   //calculated in minutes (arrival - departure)
   },
   total_seats : {
     type : Number,
@@ -52,8 +61,8 @@ const flightSchema = new mongoose.Schema({
     default : 25  //kg
   },
   facilities : {
-    type: String,
-    required : true
+    type: [String],
+    default:[]
   }
 }, {timestamps : true});
 
