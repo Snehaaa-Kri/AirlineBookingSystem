@@ -72,6 +72,11 @@ const flightSchema = new mongoose.Schema({
     type: String,
     enum: ["One Way", "Round Trip"],
     required: true
+  },
+  status: {
+    type: String,
+    enum : ["Running", "Cancelled"],
+    default: "Running"
   }
 }, {timestamps : true});
 
