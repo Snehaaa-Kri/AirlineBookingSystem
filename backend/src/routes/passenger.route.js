@@ -3,6 +3,9 @@ import { addPassenger, deletePassenger, updatePassenger, getAllPassengers } from
 
 const passengerRoutes = express.Router();
 
-passengerRoutes.post("/add-passenger", addPassenger)
+passengerRoutes.post("/add", addPassenger)
+passengerRoutes.delete("/delete/:id", deletePassenger);
+passengerRoutes.put("/update/:id", updatePassenger);
+passengerRoutes.get("/getAllPassengers", getAllPassengers);
 
 export {passengerRoutes}

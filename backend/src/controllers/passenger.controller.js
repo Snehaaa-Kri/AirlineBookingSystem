@@ -36,7 +36,7 @@ const addPassenger = async (req, res) => {
 const deletePassenger = async (req, res) => {
     try{
         const passenger_id = req.params.id;
-        const deleted_passenger = await Passenger.findByIdAndDelete(deleted_passenger);
+        const deleted_passenger = await Passenger.findByIdAndDelete(passenger_id);
 
         if(!deleted_passenger){
             return res.status(404).json({
