@@ -65,7 +65,7 @@ const updateAirport = async(req, res) => {
         const airport_id = req.params.id;
         const updates = req.body;
 
-        const updated_details = await Airport.findByIdAndUpdate(airport_id, {updates}, {new: true})
+        const updated_details = await Airport.findByIdAndUpdate(airport_id, updates, {new: true})
 
         if(!updated_details){
             return res.status(404).json({

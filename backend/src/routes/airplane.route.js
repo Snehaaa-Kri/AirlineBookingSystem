@@ -3,7 +3,7 @@ import { addAirplane, deleteAirplane, updateAirplane, getAllAirplanes  } from '.
 
 const airplaneRoutes = express.Router();
 
-airplaneRoutes.post("/add-airplane", addAirplane)
+airplaneRoutes.post("/add", addAirplane)
 airplaneRoutes.delete("/delete/:id", deleteAirplane)
 airplaneRoutes.put("/update/:id", updateAirplane)
 airplaneRoutes.get('/getAllAirplanes', getAllAirplanes)
