@@ -8,14 +8,14 @@ const auth= async(req,res,next)=>{
 
         if(!token)
         {
-            return res.status(401).josn({
+            return res.status(401).json({
                 success:false,
                 message:"Token Missing"
             })
         }
         try {
             const decode= jwt.verify(token,process.env.SECRET_KEY)
-            console.log(decode);
+            console.log("Decode in auth : ",decode);
             req.user=decode
         } catch (error) {
             return res.status(401).json({
@@ -34,7 +34,7 @@ const auth= async(req,res,next)=>{
 
 const isAdmin = (req, res, next) =>{
   try{
-    if(req.user && req.user.isAdmin){
+    if(req.user && req.user.role){
       next();
     }
     else {

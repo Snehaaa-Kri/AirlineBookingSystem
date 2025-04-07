@@ -1,3 +1,3 @@
-import {auth} from './auth.middleware.js'
+import {auth, isAdmin} from './auth.middleware.js'
 
-export {auth}
+export {auth, isAdmin}

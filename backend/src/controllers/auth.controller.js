@@ -128,11 +128,12 @@ const signUp = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User registered successfully",
-            savedUser
+            token,
+            user: savedUser
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error in signup middleware: ", error);
         return res.status(400).json({
             success: false,
             message: "User didn't get registered, Please try again"
@@ -144,7 +145,7 @@ const signUp = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        // 1. Validation
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -152,6 +153,7 @@ const login = async (req, res) => {
             });
         }
 
+        // 2. Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
