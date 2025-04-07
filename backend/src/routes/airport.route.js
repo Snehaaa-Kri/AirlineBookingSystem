@@ -1,5 +1,5 @@
 import express from 'express'
-import { addAirport } from '../controllers/index.js';
+import { addAirport, deleteAirport, updateAirport, getAllAirports } from '../controllers/index.js';
 
 const airportRoutes = express.Router();
 

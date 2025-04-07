@@ -129,69 +129,76 @@ const searchFlight = async (req, res) => {
   }
 };
 
+const updateFlight = async (req, res) => {
+  try{
+    const flight_id = req.params.id;
+    const updates = req.body;
 
-// const searchFlight = async (req, res) =>{
-//   try{
-//     const {trip_type, source_city, destination_city, departure_date, arrival_date, total_passengers, coach_type} = req.body;
+    const updated_details = await Flight.findByIdAndUpdate(flight_id, updates, {new: true});
 
-//     //validation
-//     if(!trip_type|| !source_city|| !destination_city || !departure_date|| !total_passengers|| !coach_type){
-//       return res.status(402).json({
-//         success: false,
-//         message: "All fields are required"
-//       })
-//     }
+    if(!updated_details){
+      return res.status(404).json({
+        success: false,
+        message: "Flight not found!"
+      })
+    }
+    res.status(200).json({
+      success: true,
+      message: "Flight details updated successfully!",
+      data: updated_details
+    })
+  }
+  catch(err){
+    console.log("Error updating flight details: ", err);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update flight details. Try again!"
+    })
+  }
+}
 
+const cancelFlight = async (req, res) => {
+  try{
+    const flight_id = req.params.id;
 
-//     // src and dest city se airport ids nikalni h - what if ek city me multiple airports hue? yes - find all matching cities
-//     //🔍 Step 1: Find Airports by City
-//     const source_airports = await Airport.find({city: source_city});  //arr of airports
-//     const dest_airports = await Airport.find({city : destination_city});
+    const cancelled_flight = await Flight.findByIdAndUpdate(flight_id, {status: "Cancelled"}, {new: true});
 
-//     const source_ids = source_airports.map((e) => e._id);
-//     const dest_ids = dest_airports.map((e) => e._id);
+    if(!cancelled_flight) {
+      return res.status(404).json({
+        success: false,
+        message: "Flight not found!"
+      })
+    }
+    res.status(200).json({
+      success: true,
+      message: "Flight cancelled successfully!",
+      flight: cancelled_flight   //better for frontend confirmation
+    })
+  }
+  catch(err){
+    console.log("Error cancelling flight: ", err);
+    return res.status(400).json({
+      success : false,
+      message: "Error cancelling flight.Try again!"
+    })
+  }
+}
 
-//     //🧠 Step 2: Build Query for Flight Search
-//     const searchQuery = {
-//       trip_type: trip_type,
-//       source_airport : {$in : source_ids},
-//       destination_airport : {$in : dest_ids},
-//       departure_date : new Date(departure_date),
-//       availableSeats : {$gte: total_passengers },
-//       coach_type: coach_type 
-//     };
+const getAllFlights = async (req, res) => {
+  try {
+    const flights = await Flight.find().populate("airplane_id source_airport destination_airport");
+    res.status(200).json({
+      success: true,
+      message: "All flights fetched successfully",
+      data: flights
+    });
+  } catch (err) {
+    console.log("Error fetching all flights:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching flights"
+    });
+  }
+};
 
-//     // Optional: If it's round-trip, you may want to filter return flights too
-//     if (trip_type === "Round-Trip" && arrival_date) {
-//       searchQuery.arrival_date = new Date(arrival_date);
-//     }
-
-//     //coach specific - not done
-//     // 🔍 Step 3: Search Flights 
-//     const flights = await Flight.find(searchQuery)
-//     .populate("airplane source_airport destination_airport");
-
-//     if(flights.length == 0){
-//       return res.status(202).json({
-//         success : true,
-//         message: "No flights available"
-//       })
-//     }
-
-//     res.status(200).json({
-//       success:true,
-//       message: "Searched flights are: ",
-//       data : flights
-//     })
-//   }
-//   catch(err){
-//     console.log("Error in searching flights : ", err);
-//     return res.status(400).json({
-//       success: false,
-//       message: "Failed to search flight. Try again!"
-//     })
-//   }
-// }
-
-
-export {createFlight, searchFlight}
+export {createFlight, searchFlight, updateFlight, cancelFlight, getAllFlights}

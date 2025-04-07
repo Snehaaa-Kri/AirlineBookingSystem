@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema({
     enum : ["admin", "user"],
     required: true
   },
+  isAdmin: {
+    type: Boolean,
+    default : false
+  },
   name: { 
     type: String, 
     required: true 
