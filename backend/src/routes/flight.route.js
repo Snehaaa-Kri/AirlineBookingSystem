@@ -1,5 +1,5 @@
 import express from 'express'
-import {createFlight, searchFlight} from '../controllers/index.js'
+import {createFlight, searchFlight, updateFlight, cancelFlight, getAllFlights} from '../controllers/index.js'
 const fligthRoutes = express.Router();
 
 // fligthRouter.get("/addflight", flightController.getFlights);

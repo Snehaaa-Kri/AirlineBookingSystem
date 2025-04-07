@@ -1,5 +1,5 @@
 import express from 'express'
-import { addPassenger } from '../controllers/index.js';
+import { addPassenger, deletePassenger, updatePassenger, getAllPassengers } from '../controllers/index.js';
 
 const passengerRoutes = express.Router();
 

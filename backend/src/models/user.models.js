@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   role: {
     type: String,
-    enum : ["admin", "user"],
+    enum : ["Admin", "User"],
     required: true
   },
   isAdmin: {

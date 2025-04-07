@@ -51,6 +51,7 @@ const sendOtp = async (req, res) => {
 const signUp = async (req, res) => {
     try {
       const {
+            isAdmin,
             role,
             name,
             email,
@@ -67,7 +68,7 @@ const signUp = async (req, res) => {
         } = req.body;  //these will come from signup page/postman body
 
         //validation
-        if (!role || !name || !email || !password || !phone_number || !otp || !age || !gender || !food_type || !street || !city || !state || !pin_code) {
+        if (!isAdmin|| !role || !name || !email || !password || !phone_number || !otp || !age || !gender || !food_type || !street || !city || !state || !pin_code) {
             return res.status(403).json({
                 success: false,
                 message: "All fields are required",
@@ -103,6 +104,7 @@ const signUp = async (req, res) => {
 
         // Create user object
         const user = new User({
+          isAdmin,
           role,
           name,
           email,

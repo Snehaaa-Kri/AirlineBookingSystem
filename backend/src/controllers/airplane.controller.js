@@ -70,7 +70,7 @@ const updateAirplane = async (req, res) => {
         const airplane_id = req.params.id;
         const updates = req.body;  //all update fields will be given by user
     
-        const updated_details = await Airplane.findByIdAndUpdate(airplane_id, {updates}, {new: true});
+        const updated_details = await Airplane.findByIdAndUpdate(airplane_id, updates, {new: true});
     
         if(!updated_details){
             return res.status(404).json({
@@ -80,7 +80,8 @@ const updateAirplane = async (req, res) => {
         }
         res.status(200).json({
             success: true,
-            message: "Airplane updated successfully!"
+            message: "Airplane updated successfully!",
+            data: updated_details
         })
     }
     catch(err){
@@ -94,7 +95,7 @@ const updateAirplane = async (req, res) => {
 
 const getAllAirplanes = async (req, res) => {
     try{
-        const airplanes = await Airplane.find().populate("airplane_id")
+        const airplanes = await Airplane.find()
         
         // if(!airplanes){    //.find function kbhi null return nhi krta --- it returns empty array, so the below condition is enough
         //     return res.status(404).json({

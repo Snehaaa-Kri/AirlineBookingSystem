@@ -1,5 +1,5 @@
 import express from "express";
-import {sendOtp,login,signUp} from '../controllers/index.js'
+import {sendOtp,login,signUp, getUserInfo} from '../controllers/index.js'
 
 const userRouter = express.Router();
 
