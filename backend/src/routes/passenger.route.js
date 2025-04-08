@@ -1,5 +1,6 @@
 import express from 'express'
 import { addPassenger, deletePassenger, updatePassenger, getAllPassengers } from '../controllers/index.js';
+import { auth,isAdmin } from '../middlewares/index.js';
 
 const passengerRoutes = express.Router();
 

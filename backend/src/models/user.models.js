@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum : ["Admin", "User"],
-    required: true
   },
   isAdmin: {
     type: Boolean,
-    default : false
+    default : false,
+    required: true
   },
   name: { 
     type: String, 

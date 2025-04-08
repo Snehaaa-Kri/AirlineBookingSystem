@@ -5,7 +5,7 @@ import { userRouter, airplaneRoutes, airportRoutes, passengerRoutes, fligthRoute
 
 const app = express();
 
-const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : ["http://localhost:3000"];
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : ["http://localhost:5173"];
 
 const router = express.Router();
 app.use(cors({

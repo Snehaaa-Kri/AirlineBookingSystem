@@ -36,7 +36,7 @@ function BodyComp() {
               <h3 className='px-2 text-2xl font-mono font-semibold'>Every.Single.Year</h3>
               <p className="px-2 mt-80 text-gray-700 ">
                 Enjoy new exclusive perks and benefits every single year with our luxury flight services.
-                <p>We believe loyalty should be rewarded.</p>
+                <span>We believe loyalty should be rewarded.</span>
               </p>
             </div>
             <span className="absolute text-gray-600 text-9xl text-right font-extrabold bottom-6 right-4">Booked.</span>

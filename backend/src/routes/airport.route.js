@@ -1,5 +1,6 @@
 import express from 'express'
 import { addAirport, deleteAirport, updateAirport, getAllAirports } from '../controllers/index.js';
+import { auth, isAdmin } from '../middlewares/index.js';
 
 const airportRoutes = express.Router();
 

@@ -68,7 +68,7 @@ const signUp = async (req, res) => {
         } = req.body;  //these will come from signup page/postman body
 
         //validation
-        if (!isAdmin|| !role || !name || !email || !password || !phone_number || !otp || !age || !gender || !food_type || !street || !city || !state || !pin_code) {
+        if (isAdmin === undefined|| !role || !name || !email || !password || !phone_number || !otp || !age || !gender || !food_type || !street || !city || !state || !pin_code) {
             return res.status(403).json({
                 success: false,
                 message: "All fields are required",
@@ -128,7 +128,6 @@ const signUp = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User registered successfully",
-            token,
             user: savedUser
         });
 
