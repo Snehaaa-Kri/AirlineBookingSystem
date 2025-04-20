@@ -60,7 +60,7 @@ const searchFlight = async (req, res) => {
       !total_passengers ||
       !coach_type
     ) {
-      return res.status(402).json({
+      return res.status(400).json({
         success: false,
         message: "All fields are required"
       });

@@ -4,7 +4,7 @@ import { auth, isAdmin } from '../middlewares/index.js';
 const fligthRoutes = express.Router();
 
 fligthRoutes.post("/create",auth, isAdmin, createFlight);
-fligthRoutes.get("/search",auth, searchFlight);
+fligthRoutes.post("/search",auth, searchFlight);
 fligthRoutes.put("/update/:id", auth, isAdmin, updateFlight);
 fligthRoutes.put("/cancel/:id", auth, isAdmin, cancelFlight);
 fligthRoutes.get("/getAllFlights", auth, isAdmin, getAllFlights);

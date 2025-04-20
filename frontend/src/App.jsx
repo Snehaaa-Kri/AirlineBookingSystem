@@ -1,24 +1,126 @@
 import './App.css'
-import { Link } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import HomePage from "./pages/HomePage";
+import BookingConfirmation from "./pages/BookingConfirmation";
+import CustomerSupport from "./pages/CustomerSupport";
+import FlightDetail from "./pages/FlightDetail";
+import Listing from "./pages/Listing";
+import MyBookings from "./pages/MyBookings";
+import Payment from "./pages/Payment";
+import Search from "./pages/Search";
+import Status from "./pages/Status";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import UserLogin from "./pages/UserLogin.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import MyProfile from './pages/MyProfile.jsx';
+
+//Admin routes
+import AirportListing from './pages/Admin/AirportListing.jsx';
+import AirplaneListing from './pages/Admin/AirplaneListing.jsx';
+import FlightListing from './pages/Admin/FlightListing.jsx';
+import Profile from './pages/Admin/Profile.jsx';
 
 function App() {
- 
+
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("loggedIn") === "true");
+  const [userRole, setUserRole] = useState(null);
+
+  // Effect to check for changes in localStorage
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem("loggedIn") === "true";
+    setIsLoggedIn(loggedInStatus);
+
+    if (loggedInStatus) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      setUserRole(user?.role || null);
+    } else {
+      setUserRole(null);
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Function to handle login
+  const handleLogin = (user) => {
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsLoggedIn(true);
+    setUserRole(user.role);
+    
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUserRole(null);
+  };
+
+  console.log("IsLoggedIn = ", isLoggedIn, "\nUser type = ",userRole);
 
   return (
-    <div>
-      <ToastContainer position="top-center" autoClose={3000} theme="light" />
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/my-bookings">My Bookings</Link></li>
-          <li><Link to="/search">Search</Link></li>
-          <li><Link to="/login">Login</Link></li>
-        </ul>
-      </nav>
-    </div>
-  )
+    <Router>
+      <Navbar isLoggedIn={isLoggedIn} userRole={userRole} handleLogout={handleLogout}/>
+      <Routes>
+        {/* Conditions written are :  1. if user is not loggedIn => i'll show unauthorized routes    2.  */}
+
+        {(!isLoggedIn) && (
+          <>
+            {/* unauthorized routes  */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/login" element={<UserLogin />} />
+          </>
+        ) }
+
+
+        {/* protected routes  */}
+        <Route element={<ProtectedRoute/>}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={< Navigate to='/' />} />  {/* To handle the condition of login inside protected route   NOTE - mounting component doesn't change the url, but navigate does */}
+          
+          {/* private route  */}
+          {userRole === "Admin"? (
+            <>
+              <Route path="/dashboard" element={<AdminDashboard />} />
+              <Route path="/airports" element={<AirportListing />} />
+              <Route path="/airplanes" element={<AirplaneListing />} />
+              <Route path="/flights" element={<FlightListing />} />
+              <Route path="/profile" element={<Profile />} />
+            </>
+          ): (
+            <>
+              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+              <Route path="/flight-detail" element={<FlightDetail />} />
+              <Route path="/listing" element={<Listing />} />
+              <Route path="/mybookings" element={<MyBookings />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/status" element={<Status />} />
+              <Route path="/myprofile" element={<MyProfile />} />
+            </>
+          )}
+          
+
+
+          
+        </Route>
+
+        {/* public routes  */}
+        <Route path="/customer-support" element={<CustomerSupport />} />
+        <Route path="*" element={<h2>404 Page Not Found</h2>} /> {/*Handle undefined routes*/}
+      </Routes>
+      <Footer/>
+    </Router>
+  );
 }
 
 export default App
+
+
+//protected routes are the routes that are only accessible once the user is logged in
+//private routes are the routes that are accessible for admins only
