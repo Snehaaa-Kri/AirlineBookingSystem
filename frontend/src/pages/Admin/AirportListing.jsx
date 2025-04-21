@@ -1,8 +1,9 @@
 import React from 'react'
+import Listing2 from '../../components/admin/airport/Listing2.jsx'
 
 function AirportListing() {
   return (
-    <div>AirportListing</div>
+    <Listing2/>
   )
 }
 

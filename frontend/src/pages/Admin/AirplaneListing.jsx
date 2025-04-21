@@ -1,5 +1,5 @@
 import React from 'react'
-import Listing from '../../components/admin/Listing.jsx'
+import Listing from '../../components/admin/AirplaneListing/Listing.jsx'
 
 function AirplaneListing() {
   return (

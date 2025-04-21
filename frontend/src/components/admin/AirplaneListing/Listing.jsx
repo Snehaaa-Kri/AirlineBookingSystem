@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
 import { Search } from "lucide-react"; 
-import AirplaneModal from "./AirplaneListing/AirplaneModal";
+import AirplaneModal from "./AirplaneModal";
 import {toast} from 'react-hot-toast'
+import DeleteModal from "../DeleteModal";
 
 function Listing() {
   console.log("isAdmin = ",JSON.parse(localStorage.getItem("user")).isAdmin );
@@ -23,6 +24,10 @@ function Listing() {
     setSelectedAirplane(airplane);
     setIsEditOpen(true);
   };
+
+  //for deleting model
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // New state for delete modal
+  const [airplaneToDelete, setAirplaneToDelete] = useState(null); // Track the airplane to delete
 
   //fetching all airplanes data 
   const fetchAirplanes = async () => {
@@ -101,6 +106,27 @@ function Listing() {
     console.log("Error updating airplane", err);
   }
 };
+
+
+// Handle delete
+const handleDelete = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`http://localhost:4000/api/v1/airplane/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // Remove the deleted airplane from the state
+    setAirplanes((prev) => prev.filter((plane) => plane._id !== id));
+    toast.success('Airplane deleted successfully!');
+    setIsDeleteModalOpen(false);
+  } catch (err) {
+    toast.error("Failed to delete airplane!");
+  }
+};
+
+
 const statusColors = {
   Active: "text-green-600 bg-green-100",
   Inactive: "text-red-600 bg-red-100",
@@ -118,7 +144,7 @@ return (
       <h2 className="text-xl font-semibold mb-4">All Airplanes</h2>
 
       {/* Filter Tabs and Search */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 ">
         <div className="space-x-2">
           {["All", "Active", "Inactive", "Maintenance"].map((tab) => (
             <button
@@ -158,7 +184,7 @@ return (
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-h-[55.5vh]">
         <table className="w-full text-sm text-left">
           <thead className="text-gray-700 bg-gray-100">
             <tr>
@@ -184,12 +210,16 @@ return (
                     {plane.status}
                   </span>
                 </td>
-                <td className="px-4 py-2 space-x-2">
+                <td className="px-4 py-2 space-x-4">
                   <button className="text-gray-600 hover:text-blue-600" onClick={() => handleEdit(plane)}>
                     <Pencil size={16} />
                   </button>
                   
-                  <button className="text-gray-600 hover:text-red-600">
+                  <button className="text-gray-600 hover:text-red-600" 
+                    onClick={() => { 
+                      setAirplaneToDelete(plane); 
+                      setIsDeleteModalOpen(true); 
+                    }}>
                     <Trash2 size={16} />
                   </button>
                 </td>
@@ -208,8 +238,15 @@ return (
         <AirplaneModal
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
-          onSave={handleUpdateAirplane}
+          onSave={handleDelete}
           initialData={selectedAirplane}
+        />
+
+        <DeleteModal 
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onDelete={() => handleDelete(airplaneToDelete._id)}
+          airplaneName={airplaneToDelete?.name}
         />
       </div>
     </div>
