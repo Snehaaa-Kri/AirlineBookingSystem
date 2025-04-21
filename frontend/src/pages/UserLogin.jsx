@@ -105,15 +105,16 @@ const UserLogin = () => {
         console.log("Login details are: ",response.data);
         if (response.data.success) {
           console.log(response.data.role);
-          alert("Login Successful!");
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("loggedIn", true)
           localStorage.setItem("user", JSON.stringify(response.data.user));
           if(response.data.role === "Admin"){
             navigate("/admin_dashboard"); // redirect
+            toast.success(`Welcome ${response.data.user.name|| 'back'}!`);
           }
           else {
             navigate("/home")
+            toast.success(`Welcome ${response.data.user.name || 'back'}!`);
           }
         }
       }

@@ -3,6 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
 import { Search } from "lucide-react"; 
 import AirplaneModal from "./AirplaneListing/AirplaneModal";
+import {toast} from 'react-hot-toast'
 
 function Listing() {
   console.log("isAdmin = ",JSON.parse(localStorage.getItem("user")).isAdmin );
@@ -39,6 +40,7 @@ function Listing() {
       }
       catch(err){
           console.log("Error fetching all airplanes", err);
+          toast.error('Error in fetching data!')
           setError("Failed to fetch airplanes");
           setLoading(false);
       }
@@ -66,9 +68,11 @@ function Listing() {
       )
 
       console.log("Successfully added airplane", response.data);
+      toast.success('Added successfully!')
       fetchAirplanes();
     }
     catch(err){
+      toast.error("Failed to add data!")
       console.log("Error adding airplane details", err);
     }
   };
@@ -86,12 +90,14 @@ function Listing() {
         }
       );
       console.log("Updated:", response.data);
+      toast.error('Data updated successfully!')
       // Update state after successful edit
       setAirplanes((prev) =>
         prev.map((a) => (a._id === updatedAirplane._id ? response.data.data : a))
     );
     setIsEditOpen(false);
   } catch (err) {
+    toast.error("Failed to update data!")
     console.log("Error updating airplane", err);
   }
 };

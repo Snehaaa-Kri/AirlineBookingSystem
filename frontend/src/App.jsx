@@ -2,6 +2,11 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+
+// import {Toaster, toast} from 'sonner'
+import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+//routes
 import HomePage from "./pages/HomePage";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import CustomerSupport from "./pages/CustomerSupport";
@@ -48,7 +53,7 @@ function App() {
     localStorage.setItem("user", JSON.stringify(user));
     setIsLoggedIn(true);
     setUserRole(user.role);
-    
+    toast.success(`Welcome ${user.username || 'back'}!`);
   };
 
   // Function to handle logout
@@ -57,12 +62,45 @@ function App() {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUserRole(null);
+    toast.success("Logged out successfully.");
   };
 
   console.log("IsLoggedIn = ", isLoggedIn, "\nUser type = ",userRole);
 
   return (
     <Router>
+      {/* <Toaster position="top-right" />  adding toaster - step 2 */}
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '12px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+            backdropFilter: 'blur(15px)',
+            WebkitBackdropFilter: 'blur(15px)',
+            marginTop: '46px',
+            marginRight: '15px'
+          },
+          success: {
+            style: {
+              background: 'rgba(204, 255, 204, 0.2)',
+              color: '#0f5132',
+              border: '1px solid #a3d9a5',
+            },
+          },
+          error: {
+            style: {
+              background: 'rgba(255, 204, 204, 0.2)',
+              color: '#842029',
+              border: '1px solid #f5c2c7',
+            },
+          },
+        }}
+        reverseOrder={false} />
       <Navbar isLoggedIn={isLoggedIn} userRole={userRole} handleLogout={handleLogout}/>
       <Routes>
         {/* Conditions written are :  1. if user is not loggedIn => i'll show unauthorized routes    2.  */}
