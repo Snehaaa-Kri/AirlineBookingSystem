@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 function AirplaneModal({isOpen, onClose, onSave, initialData = null}) {
     const [form, setForm] = useState({
@@ -11,6 +11,7 @@ function AirplaneModal({isOpen, onClose, onSave, initialData = null}) {
       //if user wants to edit
       useEffect(() => {
         if (initialData) {
+            console.log("Old data set");
           setForm(initialData);
         }
       }, [initialData]);

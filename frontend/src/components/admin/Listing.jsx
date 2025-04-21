@@ -13,6 +13,16 @@ function Listing() {
   const [error, setError] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  //for editing 
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedAirplane, setSelectedAirplane] = useState(null);
+  
+  //handle edit
+  const handleEdit = (airplane) => {
+    setSelectedAirplane(airplane);
+    setIsEditOpen(true);
+  };
+
   //fetching all airplanes data 
   const fetchAirplanes = async () => {
       try{
@@ -37,24 +47,13 @@ function Listing() {
     fetchAirplanes();    
   },[])
 
-  const statusColors = {
-    Active: "text-green-600 bg-green-100",
-    Inactive: "text-red-600 bg-red-100",
-    Maintenance: "text-yellow-600 bg-yellow-100",
-  };
-
-  const filteredData = airplanes.filter((airplane) => {
-    const matchStatus = filter === "All" || airplane.status === filter;
-    const matchSearch = airplane.name.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchSearch;
-  });
-
-
+  
+  
   const handleAddNew = async (data) => {
     try{
       const token = localStorage.getItem("token");
       console.log("Token = ", token);
-
+      
       const response = await axios.post(
         "http://localhost:4000/api/v1/airplane/add", 
         data, 
@@ -73,8 +72,42 @@ function Listing() {
       console.log("Error adding airplane details", err);
     }
   };
+  
+  const handleUpdateAirplane = async (updatedAirplane) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/airplane/update/${updatedAirplane._id}`,
+        updatedAirplane,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Updated:", response.data);
+      // Update state after successful edit
+      setAirplanes((prev) =>
+        prev.map((a) => (a._id === updatedAirplane._id ? response.data.data : a))
+    );
+    setIsEditOpen(false);
+  } catch (err) {
+    console.log("Error updating airplane", err);
+  }
+};
+const statusColors = {
+  Active: "text-green-600 bg-green-100",
+  Inactive: "text-red-600 bg-red-100",
+  Maintenance: "text-yellow-600 bg-yellow-100",
+};
 
-  return (
+const filteredData = airplanes.filter((airplane) => {
+  const matchStatus = filter === "All" || airplane.status === filter;
+  const matchSearch = airplane.name.toLowerCase().includes(search.toLowerCase());
+  return matchStatus && matchSearch;
+});
+
+return (
     <div className="py-6 px-20 bg-white rounded-xl shadow-md">
       <h2 className="text-xl font-semibold mb-4">All Airplanes</h2>
 
@@ -146,9 +179,10 @@ function Listing() {
                   </span>
                 </td>
                 <td className="px-4 py-2 space-x-2">
-                  <button className="text-gray-600 hover:text-blue-600">
+                  <button className="text-gray-600 hover:text-blue-600" onClick={() => handleEdit(plane)}>
                     <Pencil size={16} />
                   </button>
+                  
                   <button className="text-gray-600 hover:text-red-600">
                     <Trash2 size={16} />
                   </button>
@@ -164,6 +198,13 @@ function Listing() {
             )}
           </tbody>
         </table>
+        {/* pop up for edit */}
+        <AirplaneModal
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          onSave={handleUpdateAirplane}
+          initialData={selectedAirplane}
+        />
       </div>
     </div>
   );
