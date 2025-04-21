@@ -17,9 +17,9 @@ const airplaneSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    airplane_type: {
-        type: String
-    },
+    // airplane_type: {
+    //     type: String
+    // },
     status: {
         type: String,
         enum: ["Active", "Maintenance", "Inactive"],

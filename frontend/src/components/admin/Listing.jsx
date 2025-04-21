@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
 import { Search } from "lucide-react"; 
+import AirplaneModal from "./AirplaneListing/AirplaneModal";
 
 function Listing() {
   console.log("isAdmin = ",JSON.parse(localStorage.getItem("user")).isAdmin );
@@ -10,28 +11,29 @@ function Listing() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("")
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   //fetching all airplanes data 
+  const fetchAirplanes = async () => {
+      try{
+          const token = localStorage.getItem("token");
+          console.log("Token = ", token)
+          const response = await axios.get("http://localhost:4000/api/v1/airplane/getAllAirplanes", {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          });
+          console.log("Response =>", response.data.data);
+          setAirplanes(response.data.data);
+          setLoading(false);
+      }
+      catch(err){
+          console.log("Error fetching all airplanes", err);
+          setError("Failed to fetch airplanes");
+          setLoading(false);
+      }
+  }
   useEffect(()=> {
-    const fetchAirplanes = async () => {
-        try{
-            const token = localStorage.getItem("token");
-            console.log("Token = ", token)
-            const response = await axios.get("http://localhost:4000/api/v1/airplane/getAllAirplanes", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log("Response =>", response.data.data);
-            setAirplanes(response.data.data);
-            setLoading(false);
-        }
-        catch(err){
-            console.log("Error fetching all airplanes", err);
-            setError("Failed to fetch airplanes");
-            setLoading(false);
-        }
-    }
     fetchAirplanes();    
   },[])
 
@@ -46,6 +48,31 @@ function Listing() {
     const matchSearch = airplane.name.toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
   });
+
+
+  const handleAddNew = async (data) => {
+    try{
+      const token = localStorage.getItem("token");
+      console.log("Token = ", token);
+
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/airplane/add", 
+        data, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      )
+
+      console.log("Successfully added airplane", response.data);
+      fetchAirplanes();
+    }
+    catch(err){
+      console.log("Error adding airplane details", err);
+    }
+  };
 
   return (
     <div className="py-6 px-20 bg-white rounded-xl shadow-md">
@@ -79,8 +106,15 @@ function Listing() {
                 />
                 <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             </div>
-            
-            <button className="hover:bg-black hover:text-white px-4 py-[0.3rem] rounded-full shadow-md hover:shadow-lg bg-gray-200 text-black">Add new</button>
+            <div className="">
+              <button onClick={() => {setIsModalOpen(true)}} className="hover:bg-black hover:text-white px-4 py-[0.3rem] rounded-full shadow-md hover:shadow-lg bg-gray-200 text-black">Add new</button>
+
+              <AirplaneModal 
+                isOpen = {isModalOpen}
+                onClose = {() => {setIsModalOpen(false)}}
+                onSave = {handleAddNew}
+              />
+            </div>
         </div>
       </div>
 

@@ -2,7 +2,7 @@ import { Airplane } from "../models/index.js";
 
 const addAirplane = async (req, res) => {
     try{
-        const {name, airline,airplane_number, capacity, type, status} = req.body;
+        const {name, airline,airplane_number, capacity, status} = req.body;
 
 
         //✅ validation
@@ -19,7 +19,6 @@ const addAirplane = async (req, res) => {
             airline,
             airplane_number,
             capacity,
-            type,
             status
         });
 
