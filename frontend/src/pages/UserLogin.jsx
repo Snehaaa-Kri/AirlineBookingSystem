@@ -75,7 +75,7 @@ const UserLogin = () => {
       if (response.data.success) {
         alert("Sign Up Successful!");
         if(response.data.role === "Admin"){
-          navigate("/admin_dashboard"); // redirect
+          navigate("/dashboard"); // redirect
         }
         else {
           navigate("/home")
@@ -109,7 +109,7 @@ const UserLogin = () => {
           localStorage.setItem("loggedIn", true)
           localStorage.setItem("user", JSON.stringify(response.data.user));
           if(response.data.role === "Admin"){
-            navigate("/admin_dashboard"); // redirect
+            navigate("/dashboard"); // redirect
             toast.success(`Welcome ${response.data.user.name|| 'back'}!`);
           }
           else {

@@ -6,5 +6,6 @@ const userRouter = express.Router();
 userRouter.post("/sendotp", sendOtp);
 userRouter.post("/signup", signUp);
 userRouter.post("/login", login);
+userRouter.get('/user', getUserInfo);
 
 export default userRouter;
