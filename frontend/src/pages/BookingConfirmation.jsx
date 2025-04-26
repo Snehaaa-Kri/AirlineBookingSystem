@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BookingConfirmation = () => {
+const BookingConfirmation = ({ navigate, flight, formData, priceToPay }) => {
   return (
     <div className="flex flex-col items-center bg-gray-50 p-6">
       <div className="w-1/2 flex justify-between items-center flex-col py-[8.3rem] bg-white rounded-2xl p-8 shadow-lg">
