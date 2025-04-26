@@ -2,37 +2,80 @@ import {Airport, Flight} from '../models/index.js'
 
 
 const createFlight = async (req, res) => {
-  try{
-    let {airplane_id, flightNumber, coach_type, source_airport, destination_airport, departure_date, arrival_date, duration, total_seats, availableSeats, price, priceperseat_E, priceperseat_B, priceperseat_F, baggageAllowance, facilities, trip_type} = req.body;
-    
-    trip_type = trip_type?.trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-    //validation
-    if(!airplane_id|| !flightNumber|| !coach_type|| !source_airport|| !destination_airport|| !departure_date|| !arrival_date|| !duration|| !total_seats|| !availableSeats|| !price|| !priceperseat_E|| !priceperseat_B|| !priceperseat_F|| !baggageAllowance|| !facilities || !trip_type){
-      return res.status(404).json({
+  try {
+    let {
+      airplane_id,
+      flightNumber,
+      coach_type,
+      source_airport,
+      destination_airport,
+      departure_date,
+      arrival_date,
+      duration,
+      total_seats,
+      availableSeats,
+      price,
+      priceperseat_E,
+      priceperseat_B,
+      priceperseat_F,
+      baggageAllowance,
+      facilities,
+      trip_type
+    } = req.body;
+
+    // Validation
+    if (
+      !airplane_id || !flightNumber || !coach_type || !source_airport || !destination_airport ||
+      !departure_date || !arrival_date || !duration || !total_seats || !availableSeats ||
+      !price || !priceperseat_E || !priceperseat_B || !priceperseat_F || !baggageAllowance ||
+      !facilities || !trip_type
+    ) {
+      return res.status(400).json({
         success: false,
         message: "All fields are required for flight creation"
-      })
+      });
     }
 
-    // create and save
+    // // Format dates BEFORE saving
+    // departure_date = new Date(departure_date).toISOString().split('T')[0];
+    // arrival_date = new Date(arrival_date).toISOString().split('T')[0];
+
+    // Create and save flight
     const flight = await Flight.create({
-      airplane_id, flightNumber, coach_type, source_airport, destination_airport, departure_date, arrival_date, duration, total_seats, availableSeats, price, priceperseat_E, priceperseat_B, priceperseat_F, baggageAllowance, facilities, trip_type
-    })
-    console.log(flight)
+      airplane_id,
+      flightNumber,
+      coach_type,
+      source_airport,
+      destination_airport,
+      departure_date,
+      arrival_date,
+      duration,
+      total_seats,
+      availableSeats,
+      price,
+      priceperseat_E,
+      priceperseat_B,
+      priceperseat_F,
+      baggageAllowance,
+      facilities,
+      trip_type
+    });
+
+    console.log(flight);
 
     res.status(200).json({
       success: true,
       message: "Flight added successfully!"
-    })
-  }
-  catch(err){
+    });
+
+  } catch (err) {
     console.log("Error in adding flight. Try again!", err);
-    res.status(400).json({
-      success : false,
+    res.status(500).json({
+      success: false,
       message: "Adding flight failed!"
-    })
+    });
   }
-}
+};
 
 const searchFlight = async (req, res) => {
   try {
@@ -75,12 +118,9 @@ const searchFlight = async (req, res) => {
       city: { $regex: new RegExp(`^${destination_city}$`, 'i') }
     });
 
-    // console.log("Source airports = ",source_airports)
-    // console.log("Dest airports = ", dest_airports)
-
     if (source_airports.length === 0 || dest_airports.length === 0) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         message: "No airports found for the given cities"
       });
     }
@@ -93,13 +133,24 @@ const searchFlight = async (req, res) => {
       trip_type: trip_type,
       source_airport: { $in: source_ids },
       destination_airport: { $in: dest_ids },
-      departure_date: new Date(departure_date),
       availableSeats: { $gte: total_passengers },
       coach_type: coach_type
     };
 
+    // ✅ Departure date range (ignore time)
+    const departureStart = new Date(departure_date);
+    departureStart.setHours(0, 0, 0, 0);
+    const departureEnd = new Date(departure_date);
+    departureEnd.setHours(23, 59, 59, 999);
+    searchQuery.departure_date = { $gte: departureStart, $lte: departureEnd };
+
+    // ✅ Arrival date range for Round Trip (if provided)
     if (trip_type === "Round Trip" && arrival_date) {
-      searchQuery.arrival_date = new Date(arrival_date);
+      const arrivalStart = new Date(arrival_date);
+      arrivalStart.setHours(0, 0, 0, 0);
+      const arrivalEnd = new Date(arrival_date);
+      arrivalEnd.setHours(23, 59, 59, 999);
+      searchQuery.arrival_date = { $gte: arrivalStart, $lte: arrivalEnd };
     }
 
     // ✅ Step 3: Perform query

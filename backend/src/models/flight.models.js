@@ -34,7 +34,7 @@ const flightSchema = new mongoose.Schema({
     type : Date  //only in round trip
   },
   duration: {
-    type : Number   //calculated in minutes (arrival - departure)
+    type : String   //calculated in minutes (arrival - departure)
   },
   total_seats : {
     type : Number,
@@ -61,7 +61,7 @@ const flightSchema = new mongoose.Schema({
     required: true
   },
   baggageAllowance: {
-    type: Number,
+    type: String,
     default : 25  //kg
   },
   facilities : {

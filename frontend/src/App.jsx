@@ -111,6 +111,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/login" element={<UserLogin />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/listing" element={<Listing />} />
           </>
         ) }
 
@@ -133,11 +135,11 @@ function App() {
           ): (
             <>
               <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-              <Route path="/flight-detail" element={<FlightDetail />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/listing" element={<Listing />} />
+              <Route path="/flight-detail" element={<FlightDetail />} />
               <Route path="/mybookings" element={<MyBookings />} />
               <Route path="/payment" element={<Payment />} />
-              <Route path="/search" element={<Search />} />
               <Route path="/status" element={<Status />} />
               <Route path="/myprofile" element={<MyProfile />} />
             </>

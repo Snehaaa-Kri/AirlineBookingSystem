@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import { FaPlane, FaHotel, FaCar, FaExchangeAlt, FaUser, FaCalendarAlt, FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 function SearchBox() {
     const navigate = useNavigate();
+    const [searchedFlight, setSearchFlight] = useState([]) //array of objects
 
     //getting form data from user ui
     const [form, setForm] = useState({
@@ -42,12 +42,19 @@ function SearchBox() {
                         }
                     }
                 );
-                console.log("below axios");
+                console.log("Fetched response: ",res.data);
+                setSearchFlight(res.data);
                 console.log(form);
-                navigate("/listing")
+                navigate("/listing", { 
+                    state: { 
+                        searchedFlight: res.data,
+                        formData: form
+                    } 
+                })
             }
             catch(err){
                 console.log("Error in searching flights: ", err);
+                toast.error(err?.response?.data?.message || "Something went wrong in searching!");
             }
         }
 
@@ -112,13 +119,21 @@ function SearchBox() {
             </div>
             </div>
 
-            <div className="col-span-1 flex flex-col">
-            <label className="text-gray-600 text-sm">Return Date</label>
-            <div className="flex items-center bg-white p-2 rounded">
-                <FaCalendarAlt className="text-gray-500" />
-                <input type="date" className="w-full outline-none" name="arrival_date" value={form.arrival_date} onChange={handleChange}/>
-            </div>
-            </div>
+            {form.trip_type !== "One Way" && (
+                <div className="col-span-1 flex flex-col">
+                  <label className="text-gray-600 text-sm">Return Date</label>
+                  <div className="flex items-center bg-white p-2 rounded">
+                    <FaCalendarAlt className="text-gray-500" />
+                    <input
+                      type="date"
+                      className="w-full outline-none"
+                      name="arrival_date"
+                      value={form.arrival_date}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+            )}
 
             <div className="col-span-1 flex flex-col">
             <label className="text-gray-600 text-sm">Traveler</label>
