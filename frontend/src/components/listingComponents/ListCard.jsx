@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 function ListCard({ flight , formData}) {
   const navigate = useNavigate();
   const handleBookFlight = () => {
-    navigate("/flight-detail", { state: { flight } }); // Pass the flight directly
+    navigate("/flight-detail", { state: { 
+        flight: flight,
+        formData: formData
+      } 
+    }); // Pass the flight directly
   };
 
   console.log("ListCard flight: ", flight);
   console.log("List Card form data: ", formData);
 
 
-  //duration calculation
+  //duration calculation  ***needs to be corrected
   const departure = new Date(flight.departure_date);
   const arrival = new Date(flight.arrival_date);
 

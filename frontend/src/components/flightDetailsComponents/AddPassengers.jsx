@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaUser, FaChair, FaPlus, FaVenusMars } from "react-icons/fa";
 
-const AddPassenger = () => {
+const AddPassenger = ({formData}) => {
+    const passengersCount = formData?.total_passengers
     const [passenger, setPassenger] = useState({
         "name": "",
         "age": 1,
@@ -18,6 +19,7 @@ const AddPassenger = () => {
     }
 
     const addPassenger = () => {
+        if (totalPassengers.length >= passengersCount) return; // prevent adding more
         if (passenger.name && passenger.age) {
             setTotalPassengers([...totalPassengers, passenger]);
             setPassenger({
@@ -101,10 +103,23 @@ const AddPassenger = () => {
         </div>
         <button
             onClick={addPassenger}
-            className="px-10 flex justify-center ml-[33%] mt-6 items-center py-2 bg-black text-white rounded-full font-medium transition hover:bg-gray-800"
-        >
+            disabled={totalPassengers.length >= passengersCount}
+            className={`px-10 flex justify-center ml-[33%] mt-6 items-center py-2 rounded-full font-medium transition ${
+              totalPassengers.length >= passengersCount
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-black text-white hover:bg-gray-800'
+            }`}
+            >
             <FaPlus className="mr-2" /> Add New Passenger
         </button>
+
+        {totalPassengers.length >= passengersCount && (
+            <>
+                <p className="text-red-500 text-center mt-4">All passengers added successfully! </p>
+                <p className="text-green-700 text-center mt-4">Make payment to confirm your booking! </p>
+            </>
+        )}
+
         </div>
     </div>
   );
