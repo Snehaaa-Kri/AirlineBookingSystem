@@ -3,7 +3,7 @@ import {Booking, Flight, User} from '../models/index.js'
 const createBooking = async (req, res) => {
   try {
     const user_id = req.user.id;
-    const { flight_id, passengers } = req.body;  // ✅ Correct way to extract flight_id and passengers
+    const { flight_id, passengers } = req.body;
 
     console.log("flight id = ", flight_id);
     console.log("passengers = ", passengers);
@@ -29,7 +29,6 @@ const createBooking = async (req, res) => {
       });
     }
 
-    // ✅ Find flight details
     const flight = await Flight.findById(flight_id);
 
     if (!flight) {
@@ -39,14 +38,22 @@ const createBooking = async (req, res) => {
       });
     }
 
-    // ✅ Calculate total amount
+    // Calculate total amount
     const total_amount = flight.price * passengers.length;
+
+    // ✅ Generate seat numbers
+    const seatNumbers = passengers.map((_, index) => {
+      const row = String.fromCharCode(65 + Math.floor(index / 6)); // Row: A, B, C...
+      const col = (index % 6) + 1; // Column: 1-6
+      return `${row}${col}`; // Example: A1, A2, A3...
+    });
 
     // ✅ Create a new booking
     const booking = await Booking.create({
       user: user_id,
       flight_id: flight_id,
       passengers: passengers,
+      seatNumbers: seatNumbers, // 👈 added seatNumbers here
       total_amount: total_amount,
       booking_date: new Date(),
       status: "Confirmed",
@@ -56,14 +63,14 @@ const createBooking = async (req, res) => {
     // ✅ Add booking id to user's booked_flights array
     await User.findByIdAndUpdate(
       user_id,
-      { $push: { booked_flights: booking } }, 
+      { $push: { booked_flights: booking._id } }, // 👈 yaha ._id dalna tha!
       { new: true }
     );
 
     res.status(200).json({
       success: true,
       message: "Ticket booked successfully!",
-      booking: booking, // Optional: agar frontend ko booking details chahiye toh
+      booking: booking,
     });
   } catch (err) {
     console.error("Error in creating booking: ", err);
@@ -73,7 +80,6 @@ const createBooking = async (req, res) => {
     });
   }
 };
-
 
 const cancelBooking = async(req, res) => {
   try{
@@ -145,7 +151,6 @@ const getMyBookings = async (req, res) => {
       res.status(500).send('Error fetching bookings');
   }
 }
-
 
 const getAllBookings = async (req, res) => {
   try{

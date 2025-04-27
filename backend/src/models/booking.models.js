@@ -17,6 +17,11 @@ const bookingSchema = new mongoose.Schema({
       food_type: String,
     }
   ],
+  seatNumbers: [
+    { 
+      type: String 
+    }
+  ],
   total_amount: {
     type: Number,
     required: true
