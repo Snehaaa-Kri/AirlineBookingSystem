@@ -3,44 +3,46 @@ import {Booking, Flight, User} from '../models/index.js'
 const createBooking = async (req, res) => {
   try {
     const user_id = req.user.id;
-    const flight_id = req.params.flight_id;
-    console.log("flight id = ", flight_id)
-    const passengers = req.body;
+    const { flight_id, passengers } = req.body;  // ✅ Correct way to extract flight_id and passengers
 
-    if(!user_id){
-      return res.status(402).json({
+    console.log("flight id = ", flight_id);
+    console.log("passengers = ", passengers);
+
+    if (!user_id) {
+      return res.status(401).json({
         success: false,
-        message: "User is not authenticated"
-      })
+        message: "User is not authenticated",
+      });
     }
 
-    if(!flight_id){
-      return res.status(402).json({
+    if (!flight_id) {
+      return res.status(400).json({
         success: false,
-        message: "Flight id is missing."
-      })
+        message: "Flight id is missing.",
+      });
     }
 
-    if(!Array.isArray(passengers) || passengers.length == 0){
-      return res.status(402).json({
+    if (!Array.isArray(passengers) || passengers.length === 0) {
+      return res.status(400).json({
         success: false,
-        message: "passengers should be present"
-      })
+        message: "Passengers should be present",
+      });
     }
 
-    // ✅ total amount calculation
+    // ✅ Find flight details
     const flight = await Flight.findById(flight_id);
 
-    if(!flight){
+    if (!flight) {
       return res.status(404).json({
         success: false,
-        message: "Flight not found!"
-      })
+        message: "Flight not found!",
+      });
     }
 
+    // ✅ Calculate total amount
     const total_amount = flight.price * passengers.length;
 
-    // ✅ Add booking to Booking model
+    // ✅ Create a new booking
     const booking = await Booking.create({
       user: user_id,
       flight_id: flight_id,
@@ -48,23 +50,30 @@ const createBooking = async (req, res) => {
       total_amount: total_amount,
       booking_date: new Date(),
       status: "Confirmed",
-      paymentStatus : "Pending",
-    })
-    // ✅ Add this flight to user's booked_flights array
-    await User.findByIdAndUpdate(user_id, {$push: {booked_flights: booking.id}});
+      paymentStatus: "Pending",
+    });
+
+    // ✅ Add booking id to user's booked_flights array
+    await User.findByIdAndUpdate(
+      user_id,
+      { $push: { booked_flights: booking } }, 
+      { new: true }
+    );
 
     res.status(200).json({
       success: true,
-      message: "ticket booked successfully!"
-    })
+      message: "Ticket booked successfully!",
+      booking: booking, // Optional: agar frontend ko booking details chahiye toh
+    });
   } catch (err) {
-    console.log("Error in creating booking: ", err)
-    return res.status(400).json({ 
+    console.error("Error in creating booking: ", err);
+    return res.status(500).json({
       success: false,
-      message: "Booking failed. Try again!" 
+      message: "Booking failed. Try again!",
     });
   }
 };
+
 
 const cancelBooking = async(req, res) => {
   try{
@@ -94,6 +103,50 @@ const cancelBooking = async(req, res) => {
   }
 }
 
+const getMyBookings = async (req, res) => {
+  try {
+      const user_id = req.user.id;
+      console.log("User ID:", user_id);
+
+      // Fetch user from database
+      const user = await User.findById(user_id);
+      
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      console.log("User:", user);
+
+      // Get booking IDs from the user's booked_flights array
+      const bookingIds = user.booked_flights;
+
+      if (!bookingIds || bookingIds.length === 0) {
+          return res.status(404).send('No bookings found');
+      }
+
+      // Fetch bookings using the IDs
+      const bookings = await Booking.find({ '_id': { $in: bookingIds } }).populate({
+        path: 'flight_id',
+        populate:  [
+          { path: 'airplane_id' },
+          { path: 'source_airport' },
+          { path: 'destination_airport' }
+        ]
+      });
+
+      if (bookings.length === 0) {
+          return res.status(404).send('No booking details found');
+      }
+
+      // Send the booking details as a response
+      res.json(bookings);
+  } catch (error) {
+      console.error('Error fetching bookings:', error);
+      res.status(500).send('Error fetching bookings');
+  }
+}
+
+
 const getAllBookings = async (req, res) => {
   try{
     const all_bookings = await Booking.find();
@@ -120,4 +173,4 @@ const getAllBookings = async (req, res) => {
   }
 }
 
-export {createBooking, cancelBooking, getAllBookings}
+export {createBooking, cancelBooking, getAllBookings, getMyBookings}

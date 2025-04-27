@@ -1,68 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 const MyBookings = () => {
-  // Dummy booked flights data
-  const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      flightName: "Indigo Airlines",
-      flightNumber: "6E-204",
-      date: "2025-03-10",
-      departure: "New Delhi",
-      arrival: "Mumbai",
-      departureTime: "10:30 AM",
-      arrivalTime: "12:45 PM",
-      passengerName: "Sneha Kumari",
-      age: 22,
-      gender: "Female",
-      seatNumber: "12A",
-      status: "Confirmed",
-    },
-    {
-      id: 2,
-      flightName: "Air India",
-      flightNumber: "AI-401",
-      date: "2025-03-15",
-      departure: "Bangalore",
-      arrival: "Chennai",
-      departureTime: "4:00 PM",
-      arrivalTime: "5:15 PM",
-      passengerName: "Rudraksh Singh",
-      age: 21,
-      gender: "Male",
-      seatNumber: "7C",
-      status: "Confirmed",
-    },
-  ]);
+
+  const [flights, setFlights] = useState([]);
+  const [myBookings, setMyBookings] = useState([]);
+
+  useEffect(() => {
+    const fetchMyBookings = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const bookedFlights = user?.booked_flights || [];
+        console.log(bookedFlights);
+  
+        const token = localStorage.getItem('token'); // Assuming token is saved inside localStorage 'user'
+  
+        const response = await axios.get(
+          'http://localhost:4000/api/v1/booking/my-bookings',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+  
+        setMyBookings(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching flights: ", error);
+      }
+    };
+  
+    fetchMyBookings();
+  }, []);
+  
 
   // Function to cancel a ticket
   const cancelTicket = (id) => {
-    setBookings(bookings.filter((booking) => booking.id !== id));
+    setFlights(flights.filter((flight) => flight._id !== id));
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">My Bookings</h2>
-      {bookings.length === 0 ? (
+      {myBookings.length === 0 ? (
         <p className="text-gray-600">No bookings available.</p>
       ) : (
         <div className="space-y-6 w-3/4">
-          {bookings.map((booking) => (
-            <div key={booking.id} className="bg-white p-6 rounded-xl shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-900">{booking.flightName}</h3>
-              <p className="text-sm text-gray-500">{booking.flightNumber}</p>
+          {myBookings.map((booking) => (
+            <div key={booking._id} className="bg-white p-6 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900">{booking.flight_id.airplane_id.name}</h3>
+              <p className="text-sm text-gray-500">Flight Number: {booking.flight_id.flightNumber}</p>
               <div className="mt-4 grid grid-cols-2 gap-4 text-gray-700">
+              <div className="col-span-2">
+  <strong>Passengers:</strong>
+  <ul className="list-decimal list-inside">
+    {booking.passengers.map((passenger, index) => (
+      <li key={index}>
+        {passenger.name} ({passenger.gender}, {passenger.age} years) - Seat: {Array.isArray(booking.seatNumber) ? booking.seatNumber[index] : booking.seatNumber}
+      </li>
+    ))}
+  </ul>
+</div>
                 <p>
-                  <strong>Passenger:</strong> {booking.passengerName} ({booking.gender}, {booking.age} years)
+                  <strong>Date:</strong> {new Date(booking.booking_date).toLocaleString('en-IN', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  })}
                 </p>
                 <p>
-                  <strong>Date:</strong> {booking.date}
+                  <strong>From:</strong> {booking.flight_id.source_airport.city}
                 </p>
                 <p>
-                  <strong>From:</strong> {booking.departure} ({booking.departureTime})
-                </p>
-                <p>
-                  <strong>To:</strong> {booking.arrival} ({booking.arrivalTime})
+                  <strong>To:</strong> {booking.flight_id.destination_airport.city}
                 </p>
                 <p>
                   <strong>Seat Number:</strong> {booking.seatNumber}

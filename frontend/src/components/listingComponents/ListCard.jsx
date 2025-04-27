@@ -33,7 +33,7 @@ function ListCard({ flight , formData}) {
 
 
     //price
-    const oldPrice = flight.price+flight.price*(5/100)*formData.total_passengers; //5% extra
+    const oldPrice = (flight.price+flight.price*(5/100))*formData.total_passengers; //5% extra
     const newPrice = flight.price*formData.total_passengers;
 
 

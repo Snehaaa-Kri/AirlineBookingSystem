@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaUser, FaChair, FaPlus, FaVenusMars } from "react-icons/fa";
 
-const AddPassenger = ({formData}) => {
+const AddPassenger = ({formData, onPassengerDataChange}) => {
     const passengersCount = formData?.total_passengers
     const [passenger, setPassenger] = useState({
         "name": "",
@@ -15,18 +15,18 @@ const AddPassenger = ({formData}) => {
     
     const changeHandler = (e)=> {
         setPassenger({...passenger, [e.target.name]: e.target.value})
-
     }
-
+    
     const addPassenger = () => {
         if (totalPassengers.length >= passengersCount) return; // prevent adding more
         if (passenger.name && passenger.age) {
             setTotalPassengers([...totalPassengers, passenger]);
+            onPassengerDataChange([...totalPassengers, passenger])
             setPassenger({
-              name: "",
-              age: "",
-              gender: "Male",
-              seatPreference: "Window",
+                name: "",
+                age: "",
+                gender: "Male",
+                seatPreference: "Window",
             });
         }
     }
