@@ -10,7 +10,7 @@ function Navbar({isLoggedIn, userRole, handleLogout}) {
 
 
 
-  const adminLinks = ["Home", "Dashboard", "Airplanes", "Airports", "Flights", "Customer-Support", "Profile"];
+  const adminLinks = ["Dashboard", "Airplanes", "Airports", "Flights", "Customer-Support", "Profile"];
   const userLinks = ["Home", "Search", "MyBookings", "Customer-Support", "My Profile"];
   const guestLinks = ["Home", "Customer-Support"];
 

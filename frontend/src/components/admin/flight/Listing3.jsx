@@ -33,13 +33,17 @@ function Listing3() {
   useEffect(() => {
     fetchFlights();
   }, []);
+  useEffect(() => {
+    console.log(flights);
+  }, [flights]);
 
   const filteredFlights = flights.filter((flight) => {
     const searchTerm = search.toLowerCase();
     return (
-      flight.flightNumber.toLowerCase().includes(searchTerm) ||
-      flight.source_airport.name.toLowerCase().includes(searchTerm) ||
-      flight.destination_airport.name.toLowerCase().includes(searchTerm)
+      flight?.flightNumber?.toLowerCase().includes(searchTerm) ||
+      flight?.source_airport?.name.toLowerCase().includes(searchTerm) ||
+      flight?.destination_airport?.name.toLowerCase().includes(searchTerm) ||
+      flight?.airplane_id?.name.toLowerCase().includes(searchTerm) 
     );
   });
 

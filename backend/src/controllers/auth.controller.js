@@ -31,7 +31,6 @@ const sendOtp = async (req, res) => {
         await Otp.create(otpPayload);
 
         console.log("OTP Sent Successfully");
-
         res.status(200).json({
             success: true,
             message: "OTP sent successfully to user",

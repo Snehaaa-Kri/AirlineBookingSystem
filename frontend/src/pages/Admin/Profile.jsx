@@ -26,7 +26,7 @@ const Profile = () => {
 
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-white shadow-md rounded-2xl">
+    <div className="p-6 max-w-6xl mx-auto bg-white shadow-md rounded-2xl ">
       {/* Tabs section */}
       <div className="flex items-center gap-6 text-gray-600 font-medium mb-6 border-b pb-2 text-sm md:text-base">
         <span className="text-blue-600 border-b-2 border-blue-600 pb-1">Profile</span>

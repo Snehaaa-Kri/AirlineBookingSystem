@@ -45,7 +45,7 @@ function App() {
     } else {
       setUserRole(null);
     }
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   // Function to handle login
   const handleLogin = (user) => {
@@ -102,9 +102,8 @@ function App() {
         }}
         reverseOrder={false} />
       <Navbar isLoggedIn={isLoggedIn} userRole={userRole} handleLogout={handleLogout}/>
-      <Routes>
         {/* Conditions written are :  1. if user is not loggedIn => i'll show unauthorized routes    2.  */}
-
+      <Routes>
         {(!isLoggedIn) && (
           <>
             {/* unauthorized routes  */}
@@ -115,14 +114,11 @@ function App() {
             <Route path="/listing" element={<Listing />} />
           </>
         ) }
-
-
         {/* protected routes  */}
         <Route element={<ProtectedRoute/>}>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/login" element={< Navigate to='/' />} />  {/* To handle the condition of login inside protected route   NOTE - mounting component doesn't change the url, but navigate does */}
-          
+          <Route path="/login" element={< Navigate to='/' />} />  
           {/* private route  */}
           {userRole === "Admin"? (
             <>
@@ -144,12 +140,7 @@ function App() {
               <Route path="/myprofile" element={<MyProfile />} />
             </>
           )}
-          
-
-
-          
         </Route>
-
         {/* public routes  */}
         <Route path="/customer-support" element={<CustomerSupport />} />
         <Route path="*" element={<h2>404 Page Not Found</h2>} /> {/*Handle undefined routes*/}
