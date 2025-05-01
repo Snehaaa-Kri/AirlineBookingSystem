@@ -6,5 +6,5 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
-  base: './', // <-- This helps with relative paths when deployed
+  base: '/', // ✅ Serve from root (Vercel handles the path)
 })
