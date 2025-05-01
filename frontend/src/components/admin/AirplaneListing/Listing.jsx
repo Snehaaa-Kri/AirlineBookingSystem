@@ -34,7 +34,7 @@ function Listing() {
       try{
           const token = localStorage.getItem("token");
           console.log("Token = ", token)
-          const response = await axios.get("http://localhost:4000/api/v1/airplane/getAllAirplanes", {
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/getAllAirplanes`, {
               headers: {
                   Authorization: `Bearer ${token}`,
               },
@@ -44,7 +44,6 @@ function Listing() {
           setLoading(false);
       }
       catch(err){
-          console.log("Error fetching all airplanes", err);
           toast.error('Error in fetching data!')
           setError("Failed to fetch airplanes");
           setLoading(false);
@@ -62,7 +61,7 @@ function Listing() {
       console.log("Token = ", token);
       
       const response = await axios.post(
-        "http://localhost:4000/api/v1/airplane/add", 
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/add`, 
         data, 
         {
           headers: {
@@ -86,7 +85,7 @@ function Listing() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://localhost:4000/api/v1/airplane/update/${updatedAirplane._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/update/${updatedAirplane._id}`,
         updatedAirplane,
         {
           headers: {
@@ -95,7 +94,7 @@ function Listing() {
         }
       );
       console.log("Updated:", response.data);
-      toast.error('Data updated successfully!')
+      toast.success('Data updated successfully!')
       // Update state after successful edit
       setAirplanes((prev) =>
         prev.map((a) => (a._id === updatedAirplane._id ? response.data.data : a))
@@ -112,7 +111,7 @@ function Listing() {
 const handleDelete = async (id) => {
   try {
     const token = localStorage.getItem("token");
-    await axios.delete(`http://localhost:4000/api/v1/airplane/delete/${id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -238,7 +237,7 @@ return (
         <AirplaneModal
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
-          onSave={handleDelete}
+          onSave={handleUpdateAirplane}
           initialData={selectedAirplane}
         />
 

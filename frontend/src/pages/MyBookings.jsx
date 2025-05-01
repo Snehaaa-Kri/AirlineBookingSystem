@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const MyBookings = () => {
 
@@ -9,24 +10,19 @@ const MyBookings = () => {
     const fetchMyBookings = async () => {
       try {
         const user = JSON.parse(localStorage.getItem('user'));
-        const bookedFlights = user?.booked_flights || [];
-        console.log(bookedFlights);
-  
-        const token = localStorage.getItem('token'); // Assuming token is saved inside localStorage 'user'
-  
+        const token = localStorage.getItem('token');
         const response = await axios.get(
-          'http://localhost:4000/api/v1/booking/my-bookings',
+          `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/my-bookings`,
           {
             headers: {
               Authorization: `Bearer ${token}`
             }
           }
         );
-  
         setMyBookings(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching flights: ", error);
+        toast.error("Failed to load bookings.");
       }
     };
   
@@ -38,31 +34,27 @@ const MyBookings = () => {
   const cancelTicket = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      console.log("Hello cancel ticket!");
-  
-      // API call to update the booking status
       const response = await axios.put(
-        `http://localhost:4000/api/v1/booking/cancel/${id}`, // Use PATCH instead of DELETE
-        { status: 'Cancelled' }, // Sending updated status
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/cancel/${id}`,
+        { status: 'Cancelled' },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-  
-      // If cancel successful, update the booking list
+
       if (response.status === 200) {
-        setMyBookings((prevBookings) =>
-          prevBookings.map((booking) =>
+        setMyBookings((prev) =>
+          prev.map((booking) =>
             booking._id === id ? { ...booking, status: 'Cancelled' } : booking
           )
         );
-        alert('Booking cancelled successfully');
+        toast.success('Booking cancelled successfully');
       }
     } catch (error) {
       console.error('Error cancelling booking:', error);
-      alert('Error cancelling booking. Please try again.');
+      toast.error('Error cancelling booking. Please try again.');
     }
   };
   

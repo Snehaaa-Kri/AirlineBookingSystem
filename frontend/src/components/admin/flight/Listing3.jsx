@@ -13,7 +13,7 @@ function Listing3() {
     try {
       console.log("Flight fetching started....")
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:4000/api/v1/flight/getAllFlights", {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/flight/getAllFlights`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

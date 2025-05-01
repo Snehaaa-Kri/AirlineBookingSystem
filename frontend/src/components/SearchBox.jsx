@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { FaPlane, FaHotel, FaCar, FaExchangeAlt, FaUser, FaCalendarAlt, FaSearch } from "react-icons/fa";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 function SearchBox() {
     const navigate = useNavigate();
@@ -30,30 +31,35 @@ function SearchBox() {
 
     // sending the form data to the backend api - search wala
         const handleSubmit = async() => {
-            try{
-                const token = localStorage.getItem("token"); //token is stored in local storage
-                console.log("token = ", token);
-                console.log("above axios");
-                const res = await axios.post("http://localhost:4000/api/v1/flight/search", 
-                    form, 
-                    {
-                        headers:{
-                            Authorization: `Bearer ${token}`
-                        }
+            if (!form.source_city || !form.destination_city || !form.departure_date || (form.trip_type !== "One Way" && !form.arrival_date)) {
+                toast.error("Please fill all required fields!");
+                return;
+            }
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    toast.error("User not authenticated!");
+                    return;
+                }
+        
+                toast.loading("Searching for flights...");
+                const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/flight/search`, form, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                );
-                console.log("Fetched response: ",res.data);
+                });
+                toast.dismiss(); // dismiss loading
+                toast.success("Flights found!");
                 setSearchFlight(res.data);
-                console.log(form);
                 navigate("/listing", { 
                     state: { 
                         searchedFlight: res.data,
                         formData: form
                     } 
-                })
-            }
-            catch(err){
-                console.log("Error in searching flights: ", err);
+                });
+            } catch (err) {
+                toast.dismiss(); // dismiss loading
+                console.error("Error in searching flights: ", err);
                 toast.error(err?.response?.data?.message || "Something went wrong in searching!");
             }
         }

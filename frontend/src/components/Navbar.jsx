@@ -8,8 +8,6 @@ function Navbar({isLoggedIn, userRole, handleLogout}) {
 
   console.log("From navbar - isAuth = ", isLoggedIn, "\nand userRole = ",userRole)
 
-
-
   const adminLinks = ["Dashboard", "Airplanes", "Airports", "Flights", "Customer-Support", "Profile"];
   const userLinks = ["Home", "Search", "MyBookings", "Customer-Support", "My Profile"];
   const guestLinks = ["Home", "Customer-Support"];

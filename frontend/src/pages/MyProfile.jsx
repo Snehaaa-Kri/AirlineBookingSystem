@@ -2,6 +2,15 @@ import React from 'react';
 
 const MyProfile = () => {
 
+  // Fetch user data from localStorage
+  const userObj = JSON.parse(localStorage.getItem('user'));
+  
+  console.log("Getting userObj: ", userObj);
+  console.log("name", userObj?.name);
+  
+  if (!userObj) {
+    return <div className="text-center text-red-500 mt-10">User data not found. Please log in.</div>;
+  }
   const userData = {
     name: 'User Name',
     email: 'user@airlineapp.com',
@@ -17,16 +26,7 @@ const MyProfile = () => {
     mobileVerification: 'Verified',
     image: 'https://i.pravatar.cc/150?img=12'
   };
-  // Fetch user data from localStorage
-  const userObj = JSON.parse(localStorage.getItem('user'));
-
-  console.log("Getting userObj: ", userObj);
-  console.log("name", userObj?.name);
-
-  if (!userObj) {
-    return <div className="text-center text-red-500 mt-10">User data not found. Please log in.</div>;
-  }
-
+  
   return (
     <div className="p-6 max-w-6xl mx-auto bg-white shadow-md rounded-2xl">
       {/* Tabs section */}

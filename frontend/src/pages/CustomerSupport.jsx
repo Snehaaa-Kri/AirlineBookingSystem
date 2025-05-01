@@ -1,63 +1,111 @@
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const CustomerSupport = () => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.email || !form.message) {
+      toast.error("Please fill out all fields.");
+      return;
+    }
+
+    // Simulate API call
+    toast.success("Message sent! We'll get back to you soon.");
+    setForm({ name: "", email: "", message: "" }); // Reset form
+  };
+  
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4 md:p-6 ">
-        <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-3xl p-4 md:p-6">
-          <h1 className="text-4xl font-bold text-blue-700 mb-6 text-center">Customer Support</h1>
-          <p className="text-gray-600 text-center mb-10">
-            We're here to help! Reach out to us anytime, and we’ll happily answer your questions.
-          </p>
+      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-3xl p-4 md:p-6">
+        <h1 className="text-4xl font-bold text-blue-700 mb-6 text-center">Customer Support</h1>
+        <p className="text-gray-600 text-center mb-10">
+          We're here to help! Reach out to us anytime, and we’ll happily answer your questions.
+        </p>
 
-          {/* Contact + Form */}
-          <div className="grid md:grid-cols-2 gap-10 mb-12">
-            {/* Contact Options */}
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <span className="text-2xl text-blue-600">📞</span>
-                <div>
-                  <h3 className="font-semibold text-lg">Call Us</h3>
-                  <p className="text-gray-500">+91 98765 43210</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <span className="text-2xl text-green-600">📧</span>
-                <div>
-                  <h3 className="font-semibold text-lg">Email Us</h3>
-                  <p className="text-gray-500">support@airconnect.com</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <span className="text-2xl text-yellow-600">❓</span>
-                <div>
-                  <h3 className="font-semibold text-lg">FAQs</h3>
-                  <p className="text-gray-500">Browse common questions and answers.</p>
-                </div>
+        <div className="grid md:grid-cols-2 gap-10 mb-12">
+          {/* Contact Options */}
+          <div className="space-y-6">
+            <div className="flex items-start space-x-4">
+              <span className="text-2xl text-blue-600">📞</span>
+              <div>
+                <h3 className="font-semibold text-lg">Call Us</h3>
+                <p className="text-gray-500">+91 98765 43210</p>
               </div>
             </div>
-
-            {/* Support Form */}
-            <form className="space-y-6">
+            <div className="flex items-start space-x-4">
+              <span className="text-2xl text-green-600">📧</span>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Your Name</label>
-                <input type="text" placeholder="Sneha Kumari" className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                <h3 className="font-semibold text-lg">Email Us</h3>
+                <p className="text-gray-500">support@airconnect.com</p>
               </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <span className="text-2xl text-yellow-600">❓</span>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" placeholder="you@example.com" className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+                <h3 className="font-semibold text-lg">FAQs</h3>
+                <p className="text-gray-500">Browse common questions and answers.</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Message</label>
-                <textarea rows="4" placeholder="How can we help you?" className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"></textarea>
-              </div>
-              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition duration-200">
-                Send Message
-              </button>
-            </form>
+            </div>
           </div>
+
+          {/* Support Form */}
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Sneha Kumari"
+                className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Message</label>
+              <textarea
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                rows="4"
+                placeholder="How can we help you?"
+                className="mt-1 w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition duration-200"
+            >
+              Send Message
+            </button>
+          </form>
         </div>
 
+
+      </div>
         {/* FAQs Section */}
         <div className="mt-6 bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-xl shadow-md w-full mx-auto">
           <h3 className="text-3xl font-bold text-blue-800 mb-6 text-center">Frequently Asked Questions (FAQs)</h3>
@@ -134,7 +182,6 @@ const CustomerSupport = () => {
             </div>
           </div>
         </div>
-
       </div>
     </>
   );

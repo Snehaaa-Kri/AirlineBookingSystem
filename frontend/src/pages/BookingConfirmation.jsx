@@ -1,52 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
+import { toast } from "react-hot-toast"; // ✅ make sure this is installed
 
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {flight, formData, passengerData} = location?.state || {};  //yha se nhi hogaa---- backend integrate krna pdegaaaa
- 
-  
-    // booking integration
-    const createBooking = async () => {
-      try {
-        const token = localStorage.getItem("token"); // 🔥 Ya jaha bhi tumne save kiya hai
-  
-        const response = await axios.post(
-          "http://localhost:4000/api/v1/booking/create",
-          {
-            flight_id: flight._id,      // ✅ flight ka id
-            passengers: passengerData,  // ✅ passengers ka data
+  const { flight, formData, passengerData } = location?.state || {};
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const createBooking = async () => {
+    if (!flight || !passengerData || passengerData.length === 0) {
+      toast.error("Missing booking details!");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      toast.loading("Confirming your booking...");
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/create`,
+        {
+          flight_id: flight._id,
+          passengers: passengerData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,   // ✅ Auth token
-              "Content-Type": "application/json",
-            },
-          }
-        );
-  
-        console.log("Booking Successful!", response.data);
-  
-        // Jaise hi booking success, navigate user to my bookings
-        navigate('/mybookings', {state: {
-          bookingDetails: response.data.booking
-        }});
-      } catch (error) {
-        console.error("Booking failed:", error.response?.data || error.message);
-        alert("Booking failed! Please try again.");
-      }
-    };
+        }
+      );
 
-  console.log("Booking confirmation page");
-  console.log("Flight: ", flight);
-  console.log("Form: ", formData);
-  console.log("passen: ", passengerData);
-  
-
-
-  
+      toast.dismiss();
+      toast.success("Booking confirmed!");
+      navigate("/mybookings", {
+        state: { bookingDetails: response.data.booking },
+      });
+    } catch (error) {
+      toast.dismiss();
+      console.error("Booking failed:", error.response?.data || error.message);
+      toast.error(error?.response?.data?.message || "Booking failed. Try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="flex flex-col items-center bg-gray-50 p-6">
       <div className="w-1/2 flex justify-between items-center flex-col py-[8.3rem] bg-white rounded-2xl p-8 shadow-lg">
