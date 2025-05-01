@@ -9,20 +9,28 @@ const app = express();
 //   'http://localhost:5173',
 //   'https://airline-booking-system.vercel.app',
 // ]; 
-const allowedOrigins = process.env.CORS_ORIGIN.split(',');
+// const allowedOrigins = process.env.CORS_ORIGIN.split(',');
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true
+// }));
 
 // app.use(cors());
+
+const corsOptions = {
+  origin: '*', // Allow all origins
+  methods: 'GET,POST,PUT,DELETE', // Allow methods as needed
+  allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
