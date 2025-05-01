@@ -77,7 +77,7 @@ const UserLogin = () => {
       if (response.data.success) {
         toast.success("Sign Up Successful!");
         if (response.data.role === "Admin") {
-          navigate("/dashboard");
+          navigate("/admin_dashboard");
         } else {
           navigate("/home");
         }

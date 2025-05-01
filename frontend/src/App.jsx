@@ -28,6 +28,7 @@ import AirportListing from './pages/Admin/AirportListing.jsx';
 import AirplaneListing from './pages/Admin/AirplaneListing.jsx';
 import FlightListing from './pages/Admin/FlightListing.jsx';
 import Profile from './pages/Admin/Profile.jsx';
+import TawkToWidget from './components/admin/TawkToWidget.jsx';
 
 function App() {
 
@@ -102,6 +103,7 @@ function App() {
         }}
         reverseOrder={false} />
       <Navbar isLoggedIn={isLoggedIn} userRole={userRole} handleLogout={handleLogout}/>
+      <TawkToWidget/>
         {/* Conditions written are :  1. if user is not loggedIn => i'll show unauthorized routes    2.  */}
       <Routes>
         {(!isLoggedIn) && (
