@@ -5,32 +5,25 @@ import { userRouter, airplaneRoutes, airportRoutes, passengerRoutes, fligthRoute
 
 const app = express();
 
-// const allowedOrigins = [
-//   'http://localhost:5173',
-//   'https://airline-booking-system.vercel.app',
-// ]; 
-// const allowedOrigins = process.env.CORS_ORIGIN.split(',');
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://airline-booking-system.vercel.app',
+];
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true
-// }));
-
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (e.g., curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
+}));
 // app.use(cors());
-
-const corsOptions = {
-  origin: '*', // Allow all origins
-  methods: 'GET,POST,PUT,DELETE', // Allow methods as needed
-  allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
-};
-
-app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))

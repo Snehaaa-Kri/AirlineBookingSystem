@@ -1,4 +1,5 @@
 import {Booking, Flight, User} from '../models/index.js'
+import mailSender from '../utils/MailSender.utils.js';
 
 const createBooking = async (req, res) => {
   try {
@@ -66,6 +67,23 @@ const createBooking = async (req, res) => {
       { $push: { booked_flights: booking._id } }, // 👈 yaha ._id dalna tha!
       { new: true }
     );
+
+    // ✅ Send booking confirmation email
+    const user = await User.findById(user_id);
+    if (user && user.email) {
+      const emailTitle = "Booking Confirmed - AirConnect";
+      const emailBody = `
+        <h3>Hi ${user.name || "User"},</h3>
+        <p>Your flight booking has been <strong>confirmed</strong>.</p>
+        <p><strong>Flight:</strong> ${flight.name || flight._id}</p>
+        <p><strong>Total Passengers:</strong> ${passengers.length}</p>
+        <p><strong>Seat Numbers:</strong> ${seatNumbers.join(', ')}</p>
+        <p><strong>Total Amount:</strong> ₹${total_amount}</p>
+        <br/>
+        <p>Thank you for choosing AirConnect!</p>
+      `;
+      await mailSender(user.email, emailTitle, emailBody);
+    }
 
     res.status(200).json({
       success: true,
