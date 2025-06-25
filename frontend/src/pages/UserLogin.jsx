@@ -50,7 +50,6 @@ const UserLogin = () => {
       );
       if (response.data.success) {
         toast.success("OTP sent successfully!")
-        setServerOtp(response.data.otp); // only for dev/debug
         setSignupForm((prev) => ({ ...prev, email: otpForm.email }));
         setStep("signup");
       }
@@ -127,7 +126,7 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4 w-full bg-gray-50 min-h-[75vh]">
+    <div className="flex items-center justify-center p-4 w-full bg-gray-50 min-h-[76vh]">
       <div className="flex justify-center items-stretch min-h-[45vh] min-w-[45vw]">
         {/* Left Section */}
         <div className="w-full p-8 flex flex-col justify-center items-center bg-gradient-to-r from-black to-gray-700 text-white rounded-l-lg">

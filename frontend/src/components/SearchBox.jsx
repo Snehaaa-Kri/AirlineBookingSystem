@@ -66,7 +66,7 @@ function SearchBox() {
 
     
   return (
-    <div className="p-6 bg-gray-100">
+    <div className="p-6 bg-gray-100 ">
         <div className="bg-white shadow-lg rounded-lg p-12 ">
         {/* Tabs: Flights */}
         <div className="flex items-center space-x-6 border-b pb-3">

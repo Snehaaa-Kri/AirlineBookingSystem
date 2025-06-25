@@ -18,7 +18,7 @@ const BookingConfirmation = () => {
 
     try {
       setIsLoading(true);
-      toast.loading("Confirming your booking...");
+      toast.success("Confirming your booking...");
       const token = localStorage.getItem("token");
 
       const response = await axios.post(

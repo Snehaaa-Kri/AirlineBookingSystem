@@ -139,7 +139,7 @@ const filteredData = airplanes.filter((airplane) => {
 });
 
 return (
-    <div className="py-6 px-20 bg-white rounded-xl shadow-md">
+    <div className="py-6 px-20 bg-white rounded-xl shadow-md min-h-[70vh]">
       <h2 className="text-xl font-semibold mb-4">All Airplanes</h2>
 
       {/* Filter Tabs and Search */}

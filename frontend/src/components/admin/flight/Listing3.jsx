@@ -48,7 +48,7 @@ function Listing3() {
   });
 
   return (
-    <div className="py-6 px-10 bg-white rounded-xl shadow-md">
+    <div className="py-6 px-10 bg-white rounded-xl shadow-md min-h-[78vh]">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">All Flights</h2>
         <div className="relative mr-3 w-[50%]">

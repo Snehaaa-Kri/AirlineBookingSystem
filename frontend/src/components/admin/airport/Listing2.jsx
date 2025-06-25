@@ -98,7 +98,7 @@ function Listing2() {
   });
 
   return (
-    <div className="py-6 px-20 bg-white rounded-xl shadow-md">
+    <div className="py-6 px-20 bg-white rounded-xl shadow-md min-h-[70vh]">
 
       <div className="flex justify-between items-center mb-4">
       <h2 className="text-xl font-bold">All Airports</h2>
