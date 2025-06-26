@@ -8,7 +8,8 @@ const app = express();
 const __dirname = path.resolve();
 const allowedOrigins = [
     'http://localhost:5173', 
-  'http://localhost:4000',  
+    'http://localhost:4000', 
+    'https://airlinebookingandmanagementsystem.onrender.com', 
 ];
 
 app.use(cors({
