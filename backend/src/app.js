@@ -2,12 +2,13 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import { userRouter, airplaneRoutes, airportRoutes, passengerRoutes, fligthRoutes, bookingRoutes } from './routes/index.js';
+import path from 'path'
 
 const app = express();
-
+const __dirname = path.resolve();
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://airline-booking-system.vercel.app',
+    'http://localhost:5173', 
+  'http://localhost:4000',  
 ];
 
 app.use(cors({
@@ -36,5 +37,17 @@ app.use("/api/v1/airport", airportRoutes)
 app.use("/api/v1/passenger", passengerRoutes)
 app.use("/api/v1/flight", fligthRoutes)
 app.use("/api/v1/booking", bookingRoutes)
+
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/", "dist", "index.html"));
+  })
+
+
+}
+
 
 export default app;

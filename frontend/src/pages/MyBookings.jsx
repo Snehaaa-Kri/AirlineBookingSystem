@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import {axiosInstance} from '../utils/axiosInstance.jsx';
 import toast from 'react-hot-toast';
 
 const MyBookings = () => {
@@ -11,8 +11,8 @@ const MyBookings = () => {
       try {
         const user = JSON.parse(localStorage.getItem('user'));
         const token = localStorage.getItem('token');
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/my-bookings`,
+        const response = await axiosInstance.get(
+          `/v1/booking/my-bookings`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -34,8 +34,8 @@ const MyBookings = () => {
   const cancelTicket = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/cancel/${id}`,
+      const response = await axiosInstance.put(
+        `/v1/booking/cancel/${id}`,
         { status: 'Cancelled' },
         {
           headers: {

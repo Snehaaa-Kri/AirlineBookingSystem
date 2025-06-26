@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-hot-toast"; // ✅ make sure this is installed
+import {axiosInstance} from "../utils/axiosInstance.jsx";
+import { toast } from "react-hot-toast";
 
 const BookingConfirmation = () => {
   const location = useLocation();
@@ -21,8 +21,8 @@ const BookingConfirmation = () => {
       toast.success("Confirming your booking...");
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/booking/create`,
+      const response = await axiosInstance.post(
+        `/v1/booking/create`,
         {
           flight_id: flight._id,
           passengers: passengerData,

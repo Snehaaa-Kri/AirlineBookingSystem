@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Pencil, Trash2, Search } from "lucide-react";
-import axios from "axios";
+import {axiosInstance} from '../../../utils/axiosInstance.jsx'
 import { toast } from "react-hot-toast";
 import DeleteModal from "../DeleteModal.jsx";
 import AirportModal from "./AirportModal.jsx";
@@ -21,7 +21,7 @@ function Listing2() {
   const fetchAirports = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airport/getAllAirports`, {
+      const response = await axiosInstance.get(`/v1/airport/getAllAirports`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,7 +42,7 @@ function Listing2() {
   const handleAddNew = async (data) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airport/add`, data, {
+      const response = await axiosInstance.post(`/v1/airport/add`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ function Listing2() {
   const handleUpdateAirport = async (updatedAirport) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airport/update/${updatedAirport._id}`, updatedAirport, {
+      const response = await axiosInstance.put(`/v1/airport/update/${updatedAirport._id}`, updatedAirport, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,7 +75,7 @@ function Listing2() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airport/delete/${id}`, {
+      await axiosInstance.delete(`/v1/airport/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

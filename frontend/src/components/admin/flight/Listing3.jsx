@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Pencil, Trash2, Search } from "lucide-react";
-import axios from "axios";
+import {axiosInstance} from '../../../utils/axiosInstance.jsx'
 import { toast } from "react-hot-toast";
 
 function Listing3() {
@@ -13,7 +13,7 @@ function Listing3() {
     try {
       console.log("Flight fetching started....")
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/flight/getAllFlights`, {
+      const response = await axiosInstance.get(`/v1/flight/getAllFlights`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

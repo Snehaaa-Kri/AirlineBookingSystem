@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { FaPlane, FaHotel, FaCar, FaExchangeAlt, FaUser, FaCalendarAlt, FaSearch } from "react-icons/fa";
-import axios from 'axios';
+import {axiosInstance} from '../utils/axiosInstance.jsx';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
@@ -43,7 +43,7 @@ function SearchBox() {
                 }
         
                 toast.loading("Searching for flights...");
-                const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/flight/search`, form, {
+                const res = await axiosInstance.post(`/v1/flight/search`, form, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

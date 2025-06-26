@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import {axiosInstance} from "../utils/axiosInstance.jsx";
 import logo from "../AirConnect.jpg";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -44,8 +44,8 @@ const UserLogin = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/sendotp`,
+      const response = await axiosInstance.post(
+        `/v1/auth/sendotp`,
         { email: otpForm.email }
       );
       if (response.data.success) {
@@ -68,8 +68,8 @@ const UserLogin = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/signup`,
+      const response = await axiosInstance.post(
+        `/v1/auth/signup`,
         signupForm
       );
     
@@ -97,8 +97,8 @@ const UserLogin = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`,
+      const response = await axiosInstance.post(
+        `/v1/auth/login`,
         loginForm,
         { withCredentials: true }
       );

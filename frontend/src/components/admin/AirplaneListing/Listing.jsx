@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import axios from "axios";
 import { Search } from "lucide-react"; 
 import AirplaneModal from "./AirplaneModal";
 import {toast} from 'react-hot-toast'
 import DeleteModal from "../DeleteModal";
+import {axiosInstance } from '../../../utils/axiosInstance.jsx'
 
 function Listing() {
   console.log("isAdmin = ",JSON.parse(localStorage.getItem("user")).isAdmin );
@@ -34,7 +34,7 @@ function Listing() {
       try{
           const token = localStorage.getItem("token");
           console.log("Token = ", token)
-          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/getAllAirplanes`, {
+          const response = await axiosInstance.get(`/v1/airplane/getAllAirplanes`, {
               headers: {
                   Authorization: `Bearer ${token}`,
               },
@@ -60,8 +60,8 @@ function Listing() {
       const token = localStorage.getItem("token");
       console.log("Token = ", token);
       
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/add`, 
+      const response = await axiosInstance.post(
+        `/v1/airplane/add`, 
         data, 
         {
           headers: {
@@ -84,8 +84,8 @@ function Listing() {
   const handleUpdateAirplane = async (updatedAirplane) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/update/${updatedAirplane._id}`,
+      const response = await axiosInstance.put(
+        `/v1/airplane/update/${updatedAirplane._id}`,
         updatedAirplane,
         {
           headers: {
@@ -111,7 +111,7 @@ function Listing() {
 const handleDelete = async (id) => {
   try {
     const token = localStorage.getItem("token");
-    await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/v1/airplane/delete/${id}`, {
+    await axiosInstance.delete(`/v1/airplane/delete/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
