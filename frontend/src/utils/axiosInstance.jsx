@@ -4,7 +4,7 @@ import axios from "axios";
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? import.meta.env.VITE_API_BASE_URL
-    : "/api"; // change "/api" to your deployed backend URL if needed
+    : "https://airlinebookingandmanagementsystem.onrender.com/api"; // change "/api" to your deployed backend URL if needed
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
